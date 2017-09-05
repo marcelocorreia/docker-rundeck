@@ -6,6 +6,11 @@ PIPELINE_NAME=$(REPOSITORY)-release
 CI_TARGET=dev
 
 
+update-version:
+	cat Dockerfile | sed  's/ARG RUNDECK_VERSION=".*"/ARG RUNDECK_VERSION="$(VERSION)"/' > /tmp/Dockerfile.tmp
+	cat /tmp/Dockerfile.tmp > Dockerfile
+	rm /tmp/Dockerfile.tmp
+
 build:
 	docker build -t $(NAMESPACE)/$(CONTAINER):latest .
 .PHONY: build
