@@ -37,7 +37,6 @@ resources:
 
 jobs:
   - name: docker-rundeck-release
-  - name: docker-rundeck-release
     serial: true
     plan:
       - get: docker-repo
