@@ -25,8 +25,6 @@ set-pipeline: git-push
         -v git_branch=master
 
 	fly -t $(CI_TARGET) unpause-pipeline -p $(PIPELINE_NAME)
-	fly -t $(CI_TARGET) trigger-job -j $(PIPELINE_NAME)/$(PIPELINE_NAME)
-	fly -t $(CI_TARGET) watch -j $(PIPELINE_NAME)/$(PIPELINE_NAME)
 .PHONY: set-pipeline
 
 

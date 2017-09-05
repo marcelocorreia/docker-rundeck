@@ -1,4 +1,4 @@
-# Rundeck 2.5.3 on Debian Jessie64
+# Rundeck 2.9.3 on Debian Jessie64
 
 Rundeck is running at /usr/local/
 

@@ -36,7 +36,8 @@ resources:
       access_token: {{github_token}}
 
 jobs:
-  - name: docker-vault-release
+  - name: docker-rundeck-release
+  - name: docker-rundeck-release
     serial: true
     plan:
       - get: docker-repo
