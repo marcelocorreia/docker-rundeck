@@ -1,0 +1,68 @@
+resource_types:
+  - name: slack-notification
+    type: docker-image
+    source:
+      repository: cfcommunity/slack-notification-resource
+      tag: latest
+
+resources:
+  - name: docker-repo
+    type: git
+    source:
+      uri: {{git_repo_url}}
+      branch: master
+      private_key: {{git_private_key}}
+      username: {{github_user}}
+
+  - name: slack-alert
+    type: slack-notification
+    source:
+      url: {{slack_webook}}
+
+  - name: docker_image
+    type: docker-image
+    source:
+      repository: {{container_fullname}}
+      email: {{docker_mail}}
+      username: {{docker_user}}
+      password: {{docker_password}}
+      cache: true
+
+  - name: github_release
+    type: github-release
+    source:
+      user: {{github_user}}
+      repository: {{git_repo}}
+      access_token: {{github_token}}
+
+jobs:
+  - name: docker-vault-release
+    serial: true
+    plan:
+      - get: docker-repo
+        trigger: true
+      - put: docker_image
+        params:
+          build: docker-repo
+          tag: docker-repo/version
+          tag_as_latest: true
+      - put: github_release
+        params:
+          name: docker-repo/version
+          tag: docker-repo/version
+    on_failure:
+      put: slack-alert
+      params:
+        channel: '#ci'
+        text: |
+          Build $BUILD_NAME. *$BUILD_JOB_NAME* failed!
+          Check it out at:
+          https://concourse-ci.correia.io/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+    on_success:
+      put: slack-alert
+      params:
+        channel: '#ci'
+        text: |
+          :white_check_mark: $BUILD_PIPELINE_NAME has a new release.
+          Check it out at:
+          https://concourse-ci.correia.io/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
