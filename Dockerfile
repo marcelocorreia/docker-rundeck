@@ -1,4 +1,5 @@
 FROM java:8
+MAINTAINER marcelo correia <marcelo@correia.io>
 ARG RUNDECK_VERSION="2.9.3"
 ARG DOWNLOAD_URL="http://dl.bintray.com/rundeck/rundeck-maven/rundeck-launcher-${RUNDECK_VERSION}.jar"
 ARG RUNDECK_HOME="/opt/rundeck"
